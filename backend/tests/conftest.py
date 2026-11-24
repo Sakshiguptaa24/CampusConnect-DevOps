@@ -57,16 +57,6 @@ async def prepare_test_db():
         session.add_all([admin, student])
         await session.commit()
 
-    yield
-
-    async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-    if os.path.exists(TEST_DB_FILE):
-        try:
-            os.remove(TEST_DB_FILE)
-        except OSError:
-            pass
-
 
 async def override_get_db():
     async with TestingSessionLocal() as session:
