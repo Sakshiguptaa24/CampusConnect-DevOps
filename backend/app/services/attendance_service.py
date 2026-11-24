@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.registration import Registration
 from app.models.event import Event
+from app.models.user import User
 
 
 async def verify_qr_code(db: AsyncSession, qr_code: str) -> Optional[dict]:
@@ -32,11 +33,16 @@ async def verify_qr_code(db: AsyncSession, qr_code: str) -> Optional[dict]:
 async def mark_attended(db: AsyncSession, qr_code: str) -> dict:
     """Mark a registration as attended via QR code."""
     result = await db.execute(
-        select(Registration).where(Registration.qr_code == qr_code)
+        select(Registration, Event, User)
+        .join(Event, Registration.event_id == Event.id)
+        .join(User, Registration.user_id == User.id)
+        .where(Registration.qr_code == qr_code)
     )
-    registration = result.scalar_one_or_none()
-    if not registration:
+    row = result.first()
+    if not row:
         raise ValueError("Invalid QR code")
+
+    registration, event, user = row
 
     if registration.status == "attended":
         raise ValueError("Attendance already marked for this registration")
@@ -52,9 +58,22 @@ async def mark_attended(db: AsyncSession, qr_code: str) -> dict:
     await db.refresh(registration)
 
     return {
+        "valid": True,
         "registration_id": registration.id,
         "status": registration.status,
         "message": "Successfully checked in",
+        "event_id": event.id,
+        "event_title": event.title,
+        "student": {
+            "name": user.full_name,
+            "email": user.email,
+        },
+        "event": {
+            "id": event.id,
+            "title": event.title,
+            "date": event.date,
+            "time": event.time,
+        },
     }
 
 
