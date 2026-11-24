@@ -123,9 +123,7 @@ async def get_attendance_stats(db: AsyncSession, event_id: int) -> dict:
     )
     total_cancelled = cancelled_result.scalar() or 0
 
-    attendance_rate = (
-        (total_attended / total_confirmed * 100) if total_confirmed > 0 else 0
-    )
+    attendance_rate = (total_attended / total_confirmed * 100) if total_confirmed > 0 else 0
 
     return {
         "event_id": event_id,

@@ -10,9 +10,7 @@ engine = create_async_engine(
     connect_args=connect_args,
 )
 
-async_session_maker = async_sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
+async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
@@ -29,5 +27,6 @@ async def get_db():
 
 async def create_all_tables():
     from app.models import User, Event, Registration  # noqa: F401
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

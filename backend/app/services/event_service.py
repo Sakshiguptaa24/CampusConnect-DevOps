@@ -97,9 +97,7 @@ async def get_events(
     return events, total
 
 
-async def update_event(
-    db: AsyncSession, event_id: int, **kwargs
-) -> Optional[Event]:
+async def update_event(db: AsyncSession, event_id: int, **kwargs) -> Optional[Event]:
     event = await get_event(db, event_id)
     if not event:
         return None

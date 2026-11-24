@@ -1,11 +1,11 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.security import get_current_admin, get_password_hash
+from app.core.security import get_current_admin
 from app.models.user import User
 from app.models.event import Event
 from app.schemas.user import UserResponse
@@ -95,9 +95,7 @@ async def export_event_registrations(
     return Response(
         content=csv_data,
         media_type="text/csv",
-        headers={
-            "Content-Disposition": f'attachment; filename="event_{event_id}_registrations.csv"'
-        },
+        headers={"Content-Disposition": f'attachment; filename="event_{event_id}_registrations.csv"'},
     )
 
 
@@ -122,7 +120,5 @@ async def export_event_attendees(
     return Response(
         content=csv_data,
         media_type="text/csv",
-        headers={
-            "Content-Disposition": f'attachment; filename="event_{event_id}_attendees.csv"'
-        },
+        headers={"Content-Disposition": f'attachment; filename="event_{event_id}_attendees.csv"'},
     )

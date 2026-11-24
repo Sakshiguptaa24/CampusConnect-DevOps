@@ -1,4 +1,4 @@
-from sqlalchemy import select, func, and_, case
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.event import Event
@@ -9,45 +9,31 @@ from app.models.user import User
 async def get_dashboard_stats(db: AsyncSession) -> dict:
     """Get overall dashboard statistics."""
     # Total events
-    total_events_result = await db.execute(
-        select(func.count(Event.id)).where(Event.is_active == True)
-    )
+    total_events_result = await db.execute(select(func.count(Event.id)).where(Event.is_active == True))
     total_events = total_events_result.scalar() or 0
 
     # Total users
-    total_users_result = await db.execute(
-        select(func.count(User.id)).where(User.is_active == True)
-    )
+    total_users_result = await db.execute(select(func.count(User.id)).where(User.is_active == True))
     total_users = total_users_result.scalar() or 0
 
     # Total registrations (non-cancelled)
     total_registrations_result = await db.execute(
-        select(func.count(Registration.id)).where(
-            Registration.status.notin_(["cancelled"])
-        )
+        select(func.count(Registration.id)).where(Registration.status.notin_(["cancelled"]))
     )
     total_registrations = total_registrations_result.scalar() or 0
 
     # Total attended
     total_attended_result = await db.execute(
-        select(func.count(Registration.id)).where(
-            Registration.status == "attended"
-        )
+        select(func.count(Registration.id)).where(Registration.status == "attended")
     )
     total_attended = total_attended_result.scalar() or 0
 
     # Overall attendance rate
     confirmed_plus_attended_result = await db.execute(
-        select(func.count(Registration.id)).where(
-            Registration.status.in_(["confirmed", "attended"])
-        )
+        select(func.count(Registration.id)).where(Registration.status.in_(["confirmed", "attended"]))
     )
     confirmed_plus_attended = confirmed_plus_attended_result.scalar() or 0
-    attendance_rate = (
-        (total_attended / confirmed_plus_attended * 100)
-        if confirmed_plus_attended > 0
-        else 0
-    )
+    attendance_rate = (total_attended / confirmed_plus_attended * 100) if confirmed_plus_attended > 0 else 0
 
     return {
         "total_events": total_events,
@@ -78,16 +64,8 @@ async def get_event_analytics(db: AsyncSession, event_id: int) -> dict:
     waitlisted = status_counts.get("waitlisted", 0)
     cancelled = status_counts.get("cancelled", 0)
 
-    fill_rate = (
-        (event.registered_count / event.capacity * 100)
-        if event.capacity > 0
-        else 0
-    )
-    attendance_rate = (
-        (attended / (confirmed + attended) * 100)
-        if (confirmed + attended) > 0
-        else 0
-    )
+    fill_rate = (event.registered_count / event.capacity * 100) if event.capacity > 0 else 0
+    attendance_rate = (attended / (confirmed + attended) * 100) if (confirmed + attended) > 0 else 0
 
     return {
         "event_id": event.id,
@@ -121,13 +99,15 @@ async def get_category_stats(db: AsyncSession) -> list:
     for row in rows:
         total_cap = row.total_capacity or 1
         total_reg = row.total_registrations or 0
-        categories.append({
-            "category": row.category,
-            "event_count": row.event_count,
-            "total_registrations": total_reg,
-            "total_capacity": row.total_capacity or 0,
-            "fill_rate": round(total_reg / total_cap * 100, 2),
-        })
+        categories.append(
+            {
+                "category": row.category,
+                "event_count": row.event_count,
+                "total_registrations": total_reg,
+                "total_capacity": row.total_capacity or 0,
+                "fill_rate": round(total_reg / total_cap * 100, 2),
+            }
+        )
     return categories
 
 

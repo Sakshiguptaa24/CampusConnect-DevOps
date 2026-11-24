@@ -2,13 +2,11 @@ import time
 import logging
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
-from typing import Dict
 
 from fastapi import FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.core.config import settings
 from app.core.database import create_all_tables, async_session_maker
 from app.core.seed import seed_database
 from app.api.routes.auth import router as auth_router
@@ -86,9 +84,7 @@ async def metrics_middleware(request: Request, call_next):
         metrics_data["total_duration_seconds"] += duration
         status_code = response.status_code
 
-        metrics_data["requests_by_status"][status_code] = (
-            metrics_data["requests_by_status"].get(status_code, 0) + 1
-        )
+        metrics_data["requests_by_status"][status_code] = metrics_data["requests_by_status"].get(status_code, 0) + 1
         if status_code >= 400:
             metrics_data["errors_total"] += 1
 
@@ -98,9 +94,7 @@ async def metrics_middleware(request: Request, call_next):
         duration = time.time() - start_time
         metrics_data["total_duration_seconds"] += duration
         metrics_data["errors_total"] += 1
-        metrics_data["requests_by_status"][500] = (
-            metrics_data["requests_by_status"].get(500, 0) + 1
-        )
+        metrics_data["requests_by_status"][500] = metrics_data["requests_by_status"].get(500, 0) + 1
         raise exc
 
 
@@ -147,9 +141,7 @@ async def prometheus_metrics():
     """Prometheus-compatible plain text metrics endpoint."""
     uptime = time.time() - metrics_data["start_time"]
     total_reqs = metrics_data["requests_total"]
-    avg_latency = (
-        metrics_data["total_duration_seconds"] / total_reqs if total_reqs > 0 else 0.0
-    )
+    avg_latency = metrics_data["total_duration_seconds"] / total_reqs if total_reqs > 0 else 0.0
 
     lines = [
         "# HELP campusconnect_uptime_seconds Total application uptime in seconds",

@@ -10,9 +10,7 @@ from app.models.event import Event
 from app.models.user import User
 
 
-async def register_for_event(
-    db: AsyncSession, user_id: int, event_id: int
-) -> Registration:
+async def register_for_event(db: AsyncSession, user_id: int, event_id: int) -> Registration:
     """Register a user for an event. Waitlist if at capacity."""
     # Check event exists and is active
     event_result = await db.execute(select(Event).where(Event.id == event_id))
@@ -92,9 +90,7 @@ async def register_for_event(
     return registration
 
 
-async def cancel_registration(
-    db: AsyncSession, user_id: int, event_id: int
-) -> Optional[Registration]:
+async def cancel_registration(db: AsyncSession, user_id: int, event_id: int) -> Optional[Registration]:
     """Cancel a registration and promote from waitlist if applicable."""
     result = await db.execute(
         select(Registration).where(
@@ -143,9 +139,7 @@ async def cancel_registration(
     return registration
 
 
-async def get_user_registrations(
-    db: AsyncSession, user_id: int
-) -> List[dict]:
+async def get_user_registrations(db: AsyncSession, user_id: int) -> List[dict]:
     """Get all registrations for a user with event details."""
     result = await db.execute(
         select(Registration, Event)
@@ -156,27 +150,27 @@ async def get_user_registrations(
     rows = result.all()
     registrations = []
     for reg, event in rows:
-        registrations.append({
-            "id": reg.id,
-            "user_id": reg.user_id,
-            "event_id": reg.event_id,
-            "status": reg.status,
-            "qr_code": reg.qr_code,
-            "registered_at": reg.registered_at,
-            "cancelled_at": reg.cancelled_at,
-            "waitlist_position": reg.waitlist_position,
-            "event_title": event.title,
-            "event_date": event.date,
-            "event_time": event.time,
-            "event_location": event.location,
-            "event_category": event.category,
-        })
+        registrations.append(
+            {
+                "id": reg.id,
+                "user_id": reg.user_id,
+                "event_id": reg.event_id,
+                "status": reg.status,
+                "qr_code": reg.qr_code,
+                "registered_at": reg.registered_at,
+                "cancelled_at": reg.cancelled_at,
+                "waitlist_position": reg.waitlist_position,
+                "event_title": event.title,
+                "event_date": event.date,
+                "event_time": event.time,
+                "event_location": event.location,
+                "event_category": event.category,
+            }
+        )
     return registrations
 
 
-async def get_event_participants(
-    db: AsyncSession, event_id: int
-) -> List[dict]:
+async def get_event_participants(db: AsyncSession, event_id: int) -> List[dict]:
     """Get all participants for an event with user details."""
     result = await db.execute(
         select(Registration, User)
@@ -187,17 +181,19 @@ async def get_event_participants(
     rows = result.all()
     participants = []
     for reg, user in rows:
-        participants.append({
-            "id": reg.id,
-            "user_id": reg.user_id,
-            "event_id": reg.event_id,
-            "status": reg.status,
-            "qr_code": reg.qr_code,
-            "registered_at": reg.registered_at,
-            "cancelled_at": reg.cancelled_at,
-            "waitlist_position": reg.waitlist_position,
-            "user_name": user.full_name,
-            "user_email": user.email,
-            "user_department": user.department,
-        })
+        participants.append(
+            {
+                "id": reg.id,
+                "user_id": reg.user_id,
+                "event_id": reg.event_id,
+                "status": reg.status,
+                "qr_code": reg.qr_code,
+                "registered_at": reg.registered_at,
+                "cancelled_at": reg.cancelled_at,
+                "waitlist_position": reg.waitlist_position,
+                "user_name": user.full_name,
+                "user_email": user.email,
+                "user_department": user.department,
+            }
+        )
     return participants

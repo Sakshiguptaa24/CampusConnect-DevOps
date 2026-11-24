@@ -10,7 +10,7 @@ class Event(Base):
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=True)
     date = Column(String(20), nullable=False)  # YYYY-MM-DD
-    time = Column(String(10), nullable=False)   # HH:MM
+    time = Column(String(10), nullable=False)  # HH:MM
     end_time = Column(String(10), nullable=True)
     location = Column(String(255), nullable=False)
     category = Column(String(100), nullable=False, index=True)

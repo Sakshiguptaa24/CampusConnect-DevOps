@@ -41,9 +41,7 @@ async def cancel_registration(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    registration = await registration_service.cancel_registration(
-        db, user_id=current_user.id, event_id=event_id
-    )
+    registration = await registration_service.cancel_registration(db, user_id=current_user.id, event_id=event_id)
     if not registration:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -57,9 +55,7 @@ async def get_my_registrations(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    registrations = await registration_service.get_user_registrations(
-        db, user_id=current_user.id
-    )
+    registrations = await registration_service.get_user_registrations(db, user_id=current_user.id)
     return registrations
 
 
@@ -82,9 +78,7 @@ async def get_registration_qr(
     from sqlalchemy import select
     from app.models.registration import Registration
 
-    result = await db.execute(
-        select(Registration).where(Registration.id == registration_id)
-    )
+    result = await db.execute(select(Registration).where(Registration.id == registration_id))
     registration = result.scalar_one_or_none()
     if not registration:
         raise HTTPException(
