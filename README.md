@@ -1,14 +1,45 @@
 # CampusConnect 🎓⚡
 ### Smart College Event Registration & Gate Attendance Orchestration System
 
+[![Streamlit App](https://img.shields.io/badge/Live_App-Streamlit_Community_Cloud-FF4B4B.svg?logo=streamlit&logoColor=white)](https://share.streamlit.io/deploy?repository=Sakshiguptaa24/CampusConnect-DevOps&branch=main&mainModule=streamlit_app.py)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.104+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React_18_TypeScript-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS_v3-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![SQLite / PostgreSQL](https://img.shields.io/badge/Database-SQLite_%7C_PostgreSQL-4169E1.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-E6522C.svg?logo=prometheus&logoColor=white)](https://prometheus.io)
+[![CI/CD Pipeline](https://github.com/Sakshiguptaa24/CampusConnect-DevOps/actions/workflows/ci.yml/badge.svg)](https://github.com/Sakshiguptaa24/CampusConnect-DevOps/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 CampusConnect is an enterprise-grade full-stack SaaS platform designed for higher education campuses. It eliminates registration bottlenecks, chaotic check-in queues, and manual spreadsheet tallying with **sub-second QR pass verification**, **fair automated waitlist promotion**, and **real-time capacity analytics**.
+
+---
+
+## 🌐 Free Public Streamlit Web App (Zero-Cost Hosting)
+
+In addition to the multi-process React + FastAPI deployment, CampusConnect includes a **100% free (₹0), mobile-friendly Streamlit web application** (`streamlit_app.py`) hosted on **Streamlit Community Cloud**.
+
+### 🚀 1-Click Cloud Deployment
+Deploy directly to your free Streamlit Community Cloud account with zero configuration:
+[![Deploy to Streamlit Cloud](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/deploy?repository=Sakshiguptaa24/CampusConnect-DevOps&branch=main&mainModule=streamlit_app.py)
+
+**Deployment Coordinates:**
+- **Repository:** `Sakshiguptaa24/CampusConnect-DevOps`
+- **Branch:** `main`
+- **Main file path:** `streamlit_app.py`
+- **Target App URL:** `https://share.streamlit.io/deploy?repository=Sakshiguptaa24/CampusConnect-DevOps&branch=main&mainModule=streamlit_app.py`
+
+### 📱 Streamlit Capabilities:
+- **Responsive Mobile & Desktop UI:** Clean layout tailored for student smartphones and admin gate tablets.
+- **1-Click Demo Login:** Dedicated quick-fill buttons for both Student (`student@campusconnect.com`) and Administrator (`admin@campusconnect.com`).
+- **Student Hub:** Search events, filter by category, instant registration with concurrency checks, live waitlist queueing, digital QR passes with instant download, and 1-click cancellation with automated waitlist promotion.
+- **Admin Hub:** Live KPI metric cards, Plotly charts for turnout and category breakdowns, full Event CRUD, and RFC 4180 CSV export.
+- **Gate QR Scanner:** Integrated camera input (`st.camera_input`), image upload (`st.file_uploader`), and manual pass lookup with OpenCV `cv2.QRCodeDetector()` for sub-second gate validation and duplicate check-in prevention.
+- **Zero Cost (₹0):** Built entirely on free open-source components with local SQLite storage and Streamlit Community Cloud hosting.
+
+To run the Streamlit app locally:
+```powershell
+streamlit run streamlit_app.py
+```
 
 ---
 
@@ -171,6 +202,9 @@ docker compose down
 
 ```
 CampusConnect-devops/
+├── streamlit_app.py          # Mobile-friendly public Streamlit app for Community Cloud
+├── requirements.txt          # Root Python dependencies for Streamlit Cloud
+├── .streamlit/               # Streamlit theme & server configuration
 ├── backend/
 │   ├── app/
 │   │   ├── api/routes/       # Auth, Events, Registrations, Attendance, Analytics, Admin
